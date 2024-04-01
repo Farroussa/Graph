@@ -111,22 +111,11 @@ def is_acyclic(matrix):
                 rows_to_remove.append(i)
                 succ.append(row[0])
 
-        """print("liste des successeurs : ", succ)
-
-        print("\nMatrice avant la suppression:")
-        for row in matrix:
-            print(row)
-        print("\n-------------------------")
-        print("lignes a supp", rows_to_remove)"""
-
         for index in sorted(rows_to_remove, reverse=True):
             del matrix[index]
 
         rows_to_remove.clear()
-        """print("\nMatrice après la suppression:")
-        for row in matrix:
-            print(row)
-        print("\n-------------------------")"""
+
 
         for i in range(len(matrix)):
             if ',' in matrix[i][2]:
