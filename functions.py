@@ -54,7 +54,7 @@ def menu(matrix):
     elif b == 3:
         if is_acyclic(matrix) and not negative_arcs(matrix):
             clear()
-            print("The graph is acyclic and contains non negative arcs, we can process computations\n")
+            print("\033[92mThe graph is acyclic and contains non negative arcs, we can process computations\033[0m\n")
             task_matrix_earliest_dates = calculate_earliest_dates(tasks_matrix)
 
             task_matrix_sucessors = create_successor(task_matrix_earliest_dates)
@@ -96,10 +96,10 @@ def negative_arcs(matrice):
             cpt = -1
 
     if cpt == -1:
-        print("This problem contains negative arcs\n\n")
+        print("\033[91mThis problem contains negative arcs\033[0m\n\n")
         return True
     else:
-        print("No negative arcs\n\n")
+        print("\033[92mNo negative arcs\033[0m\n")
         return False
 
 
@@ -140,10 +140,10 @@ def is_acyclic(matrix):
     if matrix:
         for row in matrix:
             cycle.append(row[0])
-        print("The graph contains a cycle", cycle)
+        print("\033[91mThe graph contains a cycle\033[0m", cycle)
         return False
     else:
-        print("The graph is acyclic")
+        print("\033[92mThe graph is acyclic\033[0m")
         return True
 
 
@@ -295,6 +295,7 @@ def transform_pretty_table2(matrice):
     elif a == 7:
         for i in range(len(matrice)):
             matrice[i].insert(0, new_column[i])
+            transform_blue(matrice)
     elif a == 8:
         for i in range(len(matrice)):
             zeros_in_red(matrice)
@@ -310,3 +311,12 @@ def zeros_in_red(matrix):
         if total_float[i] == '0':
             total_float[i] = '\033[91m' + total_float[i] + '\033[0m'
             task[i] = '\033[91m' + task[i] + '\033[0m'
+
+
+def transform_blue(matrix):
+    ligne_verte = matrix[4]
+    ligne_verte2 = matrix[-1]
+    for i in range(len(ligne_verte)):
+        ligne_verte[i] = '\033[94m' + ligne_verte[i] + '\033[0m'
+    for j in range(len(ligne_verte2)):
+        ligne_verte2[j] = '\033[94m' + ligne_verte2[j] + '\033[0m'
