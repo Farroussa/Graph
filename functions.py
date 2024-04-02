@@ -23,7 +23,8 @@ def run():
         if stop == 1:
             running = False
         elif stop == 2:
-            ans = int(input("Do you want to work on another constraint table ?\n\n1 - Yes\n2 - No\n\nType your answer : "))
+            ans = int(input("Do you want to work on another constraint table ?\n\n1 - Yes"
+                            "\n2 - No\n\nType your answer : "))
             clear()
             if ans == 1:
                 a = int(input("Which table do you want to work on :\n\nType your answer : "))
@@ -35,7 +36,6 @@ def run():
                 menu(matrix)
 
             elif ans == 2:
-                p_matrix = copy.deepcopy(matrix)
                 print("Here the constraint table n°", a, "\n")
                 transform_pretty_table(p_matrix)
                 menu(matrix)
@@ -43,7 +43,8 @@ def run():
 
 
 def menu(matrix):
-    b = int(input("\nWhat do you want to do ?\n\n1 - Is there negative arcs\n2 - Is there a cycle\n3 - Computations\n\nType your answer : "))
+    b = int(input("\nWhat do you want to do ?\n\n1 - Is there negative arcs\n2 - Is there a cycle"
+                  "\n3 - Computations\n4 - Print the value matrix\n\nType your answer : "))
     if b == 1:
         clear()
         negative_arcs(matrix)
@@ -53,7 +54,7 @@ def menu(matrix):
     elif b == 3:
         if is_acyclic(matrix) and not negative_arcs(matrix):
             clear()
-            print("The graph is acyclic and contains non negative arcs, we can process computations")
+            print("The graph is acyclic and contains non negative arcs, we can process computations\n")
             task_matrix_earliest_dates = calculate_earliest_dates(tasks_matrix)
 
             task_matrix_sucessors = create_successor(task_matrix_earliest_dates)
@@ -68,6 +69,9 @@ def menu(matrix):
                 p_task_matrix_total_float = copy.deepcopy(task_matrix_total_float)
                 transform_pretty_table2(p_task_matrix_total_float)
                 critical_path(task_matrix_total_float)
+    elif b == 4:
+        clear()
+        print("Value matrix \n")
 
 
 def read_one_text(index):
@@ -80,7 +84,7 @@ def read_one_text(index):
 
 def transform_pretty_table(matrice):
     a = len(matrice[0])
-    if a == 3:
+    if a == 3 and matrice[0][0] != 'Task':
         matrice.insert(0, ['Task', 'Duration', 'Predecessors'])
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
@@ -115,7 +119,6 @@ def is_acyclic(matrix):
             del matrix[index]
 
         rows_to_remove.clear()
-
 
         for i in range(len(matrix)):
             if ',' in matrix[i][2]:
@@ -261,24 +264,18 @@ def critical_path(tasks_matrix):
     for i in range(len(tasks)):
         if int(total_float[i]) == 0:
             path.append(tasks[i])
-    if path[0] == "A":
-        path[0] = "α"
-    if path[-1] == "W":
-        path[-1] = "ω"
     print("\nThe critical path is : \n")
     for j in range(len(path)):
-        print(" --> ", path[j], end='')
+        print(" --> \033[91m", path[j], "\033[0m", end='')
+
     print()
 
 
 def transform_pretty_table2(matrice):
     a = len(matrice)
-    if matrice[0][0] == "A":
-        matrice[0][0] = "α"
-    if matrice[0][-1] == "W":
-        matrice[0][-1] = "ω"
 
-    new_column = ['Task', 'Rank', 'Duration', 'Predecessors', 'Earliest Date', 'Successors', 'Latest Date', 'Total Float']
+    new_column = ['Task', 'Rank', 'Duration', 'Predecessors', 'Earliest Date',
+                  'Successors', 'Latest Date', 'Total Float']
 
     if a == 2:
         for i in range(len(matrice)):
@@ -300,10 +297,16 @@ def transform_pretty_table2(matrice):
             matrice[i].insert(0, new_column[i])
     elif a == 8:
         for i in range(len(matrice)):
+            zeros_in_red(matrice)
             matrice[i].insert(0, new_column[i])
 
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
 
-
-
+def zeros_in_red(matrix):
+    task = matrix[0]
+    total_float = matrix[-1]
+    for i in range(len(total_float)):
+        if total_float[i] == '0':
+            total_float[i] = '\033[91m' + total_float[i] + '\033[0m'
+            task[i] = '\033[91m' + task[i] + '\033[0m'
