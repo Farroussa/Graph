@@ -35,7 +35,6 @@ def run():
                 menu(matrix)
 
             elif ans == 2:
-                p_matrix = copy.deepcopy(matrix)
                 print("Here the constraint table n°", a, "\n")
                 transform_pretty_table(p_matrix)
                 menu(matrix)
@@ -80,7 +79,7 @@ def read_one_text(index):
 
 def transform_pretty_table(matrice):
     a = len(matrice[0])
-    if a == 3:
+    if a == 3 and matrice[0][0] != 'Task':
         matrice.insert(0, ['Task', 'Duration', 'Predecessors'])
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
@@ -115,7 +114,6 @@ def is_acyclic(matrix):
             del matrix[index]
 
         rows_to_remove.clear()
-
 
         for i in range(len(matrix)):
             if ',' in matrix[i][2]:
@@ -267,7 +265,8 @@ def critical_path(tasks_matrix):
         path[-1] = "ω"
     print("\nThe critical path is : \n")
     for j in range(len(path)):
-        print(" --> ", path[j], end='')
+        print(" --> \033[91m", path[j], "\033[0m", end='')
+
     print()
 
 
@@ -300,10 +299,16 @@ def transform_pretty_table2(matrice):
             matrice[i].insert(0, new_column[i])
     elif a == 8:
         for i in range(len(matrice)):
+            zeros_in_red(matrice)
             matrice[i].insert(0, new_column[i])
 
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
 
-
-
+def zeros_in_red(matrix):
+    task = matrix[0]
+    total_float = matrix[-1]
+    for i in range(len(total_float)):
+        if total_float[i] == '0':
+            total_float[i] = '\033[91m' + total_float[i] + '\033[0m'
+            task[i] = '\033[91m' + task[i] + '\033[0m'
