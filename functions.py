@@ -75,7 +75,112 @@ def read_one_text(index):
     data = []
     for row in file:
         data.append([str(x) for x in row.split()])
+    print (data)
     return data
+
+def print_value_matrix(data):
+    for x in range (4):
+        print("\n")
+    nb_vertices = len(data)
+    for i in range (nb_vertices+3):
+        for j in range (nb_vertices+3):
+            #Print the first line
+            if(i==0):
+                if(j==0):
+                    print(" ", end="\t")
+                elif(j==1):
+                    print("0", end="\t")
+                elif(j==nb_vertices+2):
+                    print(int(data[j-3][0])+1, end="\t")
+                    print("\n")
+                else:
+                    print(data[j-2][0], end="\t")
+                
+            
+            #Print the second line (particular case)
+            elif(i==1):
+                if(j==0):
+                    print("0", end="\t")
+                elif(j==nb_vertices+2):
+                    print("*",end="\t")
+                    print("\n")
+                else:
+                    if('none' in data[j-2][2]):
+                        print("0", end="\t")
+                    else:
+                        print("*", end="\t")
+                
+            
+
+            elif(i==nb_vertices+2):
+                if(j==0):
+                    print(int(data[i-3][0])+1, end="\t")
+                else:
+                    if(j==nb_vertices+2):
+                        print("*", end="\t")
+                        print("\n")
+                    else:
+                        print("*", end="\t")
+                
+
+
+            else:
+                if(j==0):
+                    print(data[i-2][0], end="\t")
+                elif(j==nb_vertices+2):
+                    
+                        cmt=0
+                        for k in range(nb_vertices):
+                            if(str(data[i-2][0]) in data[k][2]):
+                                cmt=cmt+1
+                        if(cmt==0):
+                            print(data[i-2][1], end="\t")
+                        else:
+                            print("*", end="\t")
+                        print("\n")
+
+                else:
+                    if(str(data[i-2][0]) in data[j-2][2]):
+                        print(data[i-2][1], end="\t")
+                    else:
+                        print("*", end="\t")
+            
+                    
+                    
+                    
+
+    
+    return 
+
+
+
+        #     if (i==0):
+        #         if(j==0):
+        #             print(" ", end="  ")
+        #         elif(j==1):
+        #             print("0", end="  ")
+        #         elif(j==nb_vertices+2):
+        #             print(int(data[j-3][0])+1, end="  ")
+        #         else:
+        #             print(data[j-2][0], end="  ")   
+        #     else:
+        #         if(j==0):
+        #             if(i==1):
+        #                 print("0", end="  ")
+        #             elif(i==nb_vertices+2):
+        #                 print(int(data[j-3][0])+1, end="  ")
+        #             else:
+        #                 print(data[i-2][0], end="  ")
+        #         elif(j==1):
+        #             if 'none' in data[i-2][2]:
+        #                 print(data[i-2][1], end=" ")
+        #         else:
+        #             print("*", end=" ")
+        # print("\n")  
+
+    # return 
+                
+
 
 
 def transform_pretty_table(matrice):

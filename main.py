@@ -9,12 +9,12 @@ matrice = [['A', '1', '2', '4', '3', '6', '5', '7', '8', '9', '10', 'W'],
 if __name__ == '__main__':
     #remove_rows_with_none(a)
     #is_acyclic(a)
-    run()
+    #run()
     #is_negative_arcs()
     #find_successor(matrice, [6, 5, 7])
     #find_latest_dates(matrice, [10], [0, 0, 0, 0, 4, 15, 19, 20, 16, 19, 21, 0])
-
-
+    #read_one_text(1)
+    print_value_matrix(read_one_text(2))
 
 
 
