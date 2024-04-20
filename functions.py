@@ -23,7 +23,8 @@ def run():
         if stop == 1:
             running = False
         elif stop == 2:
-            ans = int(input("Do you want to work on another constraint table ?\n\n1 - Yes\n2 - No\n\nType your answer : "))
+            ans = int(input("Do you want to work on another constraint table ?\n\n1 - Yes"
+                            "\n2 - No\n\nType your answer : "))
             clear()
             if ans == 1:
                 a = int(input("Which table do you want to work on :\n\nType your answer : "))
@@ -35,7 +36,6 @@ def run():
                 menu(matrix)
 
             elif ans == 2:
-                p_matrix = copy.deepcopy(matrix)
                 print("Here the constraint table n°", a, "\n")
                 transform_pretty_table(p_matrix)
                 menu(matrix)
@@ -43,7 +43,8 @@ def run():
 
 
 def menu(matrix):
-    b = int(input("\nWhat do you want to do ?\n\n1 - Is there negative arcs\n2 - Is there a cycle\n3 - Computations\n\nType your answer : "))
+    b = int(input("\nWhat do you want to do ?\n\n1 - Is there negative arcs\n2 - Is there a cycle"
+                  "\n3 - Computations\n4 - Print the value matrix\n\nType your answer : "))
     if b == 1:
         clear()
         negative_arcs(matrix)
@@ -53,7 +54,7 @@ def menu(matrix):
     elif b == 3:
         if is_acyclic(matrix) and not negative_arcs(matrix):
             clear()
-            print("The graph is acyclic and contains non negative arcs, we can process computations")
+            print("\033[92mThe graph is acyclic and contains non negative arcs, we can process computations\033[0m\n")
             task_matrix_earliest_dates = calculate_earliest_dates(tasks_matrix)
 
             task_matrix_sucessors = create_successor(task_matrix_earliest_dates)
@@ -68,10 +69,13 @@ def menu(matrix):
                 p_task_matrix_total_float = copy.deepcopy(task_matrix_total_float)
                 transform_pretty_table2(p_task_matrix_total_float)
                 critical_path(task_matrix_total_float)
+    elif b == 4:
+        clear()
+        print("Value matrix \n")
 
 
 def read_one_text(index):
-    file = open('Constraint_Tables/' + str(index) + '.txt')
+    file = open('Constraint_Tables/table_' + str(index) + '.txt')
     data = []
     for row in file:
         data.append([str(x) for x in row.split()])
@@ -185,7 +189,7 @@ def print_value_matrix(data):
 
 def transform_pretty_table(matrice):
     a = len(matrice[0])
-    if a == 3:
+    if a == 3 and matrice[0][0] != 'Task':
         matrice.insert(0, ['Task', 'Duration', 'Predecessors'])
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
@@ -197,10 +201,10 @@ def negative_arcs(matrice):
             cpt = -1
 
     if cpt == -1:
-        print("This problem contains negative arcs\n\n")
+        print("\033[91mThis problem contains negative arcs\033[0m\n\n")
         return True
     else:
-        print("No negative arcs\n\n")
+        print("\033[92mNo negative arcs\033[0m\n")
         return False
 
 
@@ -216,22 +220,10 @@ def is_acyclic(matrix):
                 rows_to_remove.append(i)
                 succ.append(row[0])
 
-        """print("liste des successeurs : ", succ)
-
-        print("\nMatrice avant la suppression:")
-        for row in matrix:
-            print(row)
-        print("\n-------------------------")
-        print("lignes a supp", rows_to_remove)"""
-
         for index in sorted(rows_to_remove, reverse=True):
             del matrix[index]
 
         rows_to_remove.clear()
-        """print("\nMatrice après la suppression:")
-        for row in matrix:
-            print(row)
-        print("\n-------------------------")"""
 
         for i in range(len(matrix)):
             if ',' in matrix[i][2]:
@@ -253,10 +245,10 @@ def is_acyclic(matrix):
     if matrix:
         for row in matrix:
             cycle.append(row[0])
-        print("The graph contains a cycle", cycle)
+        print("\033[91mThe graph contains a cycle\033[0m", cycle)
         return False
     else:
-        print("The graph is acyclic")
+        print("\033[92mThe graph is acyclic\033[0m")
         return True
 
 
@@ -377,24 +369,18 @@ def critical_path(tasks_matrix):
     for i in range(len(tasks)):
         if int(total_float[i]) == 0:
             path.append(tasks[i])
-    if path[0] == "A":
-        path[0] = "α"
-    if path[-1] == "W":
-        path[-1] = "ω"
     print("\nThe critical path is : \n")
     for j in range(len(path)):
-        print(" --> ", path[j], end='')
+        print(" --> \033[91m", path[j], "\033[0m", end='')
+
     print()
 
 
 def transform_pretty_table2(matrice):
     a = len(matrice)
-    if matrice[0][0] == "A":
-        matrice[0][0] = "α"
-    if matrice[0][-1] == "W":
-        matrice[0][-1] = "ω"
 
-    new_column = ['Task', 'Rank', 'Duration', 'Predecessors', 'Earliest Date', 'Successors', 'Latest Date', 'Total Float']
+    new_column = ['Task', 'Rank', 'Duration', 'Predecessors', 'Earliest Date',
+                  'Successors', 'Latest Date', 'Total Float']
 
     if a == 2:
         for i in range(len(matrice)):
@@ -414,12 +400,28 @@ def transform_pretty_table2(matrice):
     elif a == 7:
         for i in range(len(matrice)):
             matrice[i].insert(0, new_column[i])
+            transform_blue(matrice)
     elif a == 8:
         for i in range(len(matrice)):
+            zeros_in_red(matrice)
             matrice[i].insert(0, new_column[i])
 
     print(tabulate(matrice, headers='firstrow', tablefmt='fancy_grid'))
 
 
+def zeros_in_red(matrix):
+    task = matrix[0]
+    total_float = matrix[-1]
+    for i in range(len(total_float)):
+        if total_float[i] == '0':
+            total_float[i] = '\033[91m' + total_float[i] + '\033[0m'
+            task[i] = '\033[91m' + task[i] + '\033[0m'
 
 
+def transform_blue(matrix):
+    ligne_verte = matrix[4]
+    ligne_verte2 = matrix[-1]
+    for i in range(len(ligne_verte)):
+        ligne_verte[i] = '\033[94m' + ligne_verte[i] + '\033[0m'
+    for j in range(len(ligne_verte2)):
+        ligne_verte2[j] = '\033[94m' + ligne_verte2[j] + '\033[0m'
