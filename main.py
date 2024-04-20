@@ -10,10 +10,11 @@ matrice = [['A', '1', '2', '4', '3', '6', '5', '7', '8', '9', '10', 'W'],
 
 if __name__ == '__main__':
     #is_acyclic(a)
-    run()
-    #read_one_text(1)
+    #run()
     #is_negative_arcs()
-
+    #read_one_text(1)
+    print_value_matrix(read_one_text(2))
+    #read_one_text(1)
 
 
 
