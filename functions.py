@@ -75,7 +75,7 @@ def menu(matrix):
 
 
 def read_one_text(index):
-    file = open('Constraint_Tables/' + str(index) + '.txt')
+    file = open('Constraint_Tables/table_' + str(index) + '.txt')
     data = []
     for row in file:
         data.append([str(x) for x in row.split()])
