@@ -55,11 +55,18 @@ def menu(matrix):
         if is_acyclic(matrix) and not negative_arcs(matrix):
             clear()
             print("\033[92mThe graph is acyclic and contains non negative arcs, we can process computations\033[0m\n")
+
+            tasks_matrix = rank_func(matrix)
+            duration(tasks_matrix, matrix)
+            predecessor(tasks_matrix, matrix)
+
             task_matrix_earliest_dates = calculate_earliest_dates(tasks_matrix)
 
             task_matrix_sucessors = create_successor(task_matrix_earliest_dates)
-
+            p_task_sucessors = copy.deepcopy(task_matrix_sucessors)
+            transform_pretty_table2(p_task_sucessors)
             task_matrix_latest_dates = calculate_latest_dates(task_matrix_sucessors)
+
             p_tasks_matrix_latest_dates = copy.deepcopy(task_matrix_latest_dates)
             transform_pretty_table2(p_tasks_matrix_latest_dates)
             c = int(input("\n\nDo you want to compute the Total Float : \n\n1 - Yes\n2 - No\n\nType your answer : "))
@@ -103,7 +110,8 @@ def negative_arcs(matrice):
         return False
 
 
-def is_acyclic(matrix):
+def is_acyclic(matrix1):
+    matrix = copy.deepcopy(matrix1)
     rows_to_remove = []
     succ = []
     cycle = []
@@ -159,10 +167,10 @@ def supprimer(list1, list2):
     return list2
 
 
-tasks_matrix = [['A', '1', '2', '4', '3', '6', '5', '7', '8', '9', '10', 'W'],
+"""tasks_matrix = [['A', '1', '2', '4', '3', '6', '5', '7', '8', '9', '10', 'W'],
                 ['0', '1', '2', '2', '3', '4', '4', '4', '5', '6', '7', '8'],
                 ['0', '7', '3', '8', '1', '1', '2', '1', '3', '2', '1', '0'],
-                ['--', 'A', '1', '1', '2', '3,4', '3,4', '3,4', '6', '8', '5,7,9', '10']]
+                ['--', 'A', '1', '1', '2', '3,4', '3,4', '3,4', '6', '8', '5,7,9', '10']]"""
 
 
 def calculate_earliest_dates(tasks_matrix):
@@ -379,7 +387,7 @@ def duration(matrix, constraint_table):
     duration_matrix = ['0']
     for e in matrix[0]:
         for i in constraint_table:
-            if e[0] == i[0]:
+            if e == i[0]:
                 duration_matrix.append(i[1])
 
     duration_matrix.append('0')
