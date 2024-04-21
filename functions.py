@@ -43,15 +43,15 @@ def run():
 
 
 def menu(matrix):
-    b = int(input("\nWhat do you want to do ?\n\n1 - Is there negative arcs\n2 - Is there a cycle"
-                  "\n3 - Computations\n4 - Print the value matrix\n\nType your answer : "))
-    if b == 1:
+    b = int(input("\nWhat do you want to do ?\n\n1 - Print the value matrix\n2 - Is there negative arcs"
+                  "\n3 - Is there a cycle""\n4 - Computations\n\nType your answer : "))
+    if b == 2:
         clear()
         negative_arcs(matrix)
-    elif b == 2:
+    elif b == 3:
         clear()
         is_acyclic(matrix)
-    elif b == 3:
+    elif b == 4:
         if is_acyclic(matrix) and not negative_arcs(matrix):
             clear()
             print("\033[92mThe graph is acyclic and contains non negative arcs, we can process computations\033[0m\n")
@@ -69,9 +69,9 @@ def menu(matrix):
                 p_task_matrix_total_float = copy.deepcopy(task_matrix_total_float)
                 transform_pretty_table2(p_task_matrix_total_float)
                 critical_path(task_matrix_total_float)
-    elif b == 4:
+    elif b == 1:
         clear()
-        print("Value matrix \n")
+        print_value_matrix(matrix)
 
 
 def read_one_text(index):
@@ -80,6 +80,100 @@ def read_one_text(index):
     for row in file:
         data.append([str(x) for x in row.split()])
     return data
+
+
+def print_value_matrix(data):
+    for x in range(4):
+        print("\n")
+    nb_vertices = len(data)
+    for i in range(nb_vertices+3):
+        for j in range(nb_vertices+3):
+            # Print the first line
+            if i == 0:
+                if j == 0:
+                    print(" ", end="\t")
+                elif j == 1:
+                    print("0", end="\t")
+                elif j == nb_vertices+2:
+                    print(int(data[j-3][0])+1, end="\t")
+                    print("\n")
+                else:
+                    print(data[j-2][0], end="\t")
+
+
+            # Print the second line (particular case)
+            elif(i==1):
+                if(j==0):
+                    print("0", end="\t")
+                elif(j==nb_vertices+2):
+                    print("*",end="\t")
+                    print("\n")
+                else:
+                    if('none' in data[j-2][2]):
+                        print("0", end="\t")
+                    else:
+                        print("*", end="\t")
+
+            elif(i==nb_vertices+2):
+                if(j==0):
+                    print(int(data[i-3][0])+1, end="\t")
+                else:
+                    if(j==nb_vertices+2):
+                        print("*", end="\t")
+                        print("\n")
+                    else:
+                        print("*", end="\t")
+
+            else:
+                if(j==0):
+                    print(data[i-2][0], end="\t")
+                elif(j==nb_vertices+2):
+
+                        cmt=0
+                        for k in range(nb_vertices):
+                            if(str(data[i-2][0]) in data[k][2]):
+                                cmt=cmt+1
+                        if(cmt==0):
+                            print(data[i-2][1], end="\t")
+                        else:
+                            print("*", end="\t")
+                        print("\n")
+
+                else:
+                    if(str(data[i-2][0]) in data[j-2][2]):
+                        print(data[i-2][1], end="\t")
+                    else:
+                        print("*", end="\t")
+
+    return 
+
+
+
+        #     if (i==0):
+        #         if(j==0):
+        #             print(" ", end="  ")
+        #         elif(j==1):
+        #             print("0", end="  ")
+        #         elif(j==nb_vertices+2):
+        #             print(int(data[j-3][0])+1, end="  ")
+        #         else:
+        #             print(data[j-2][0], end="  ")   
+        #     else:
+        #         if(j==0):
+        #             if(i==1):
+        #                 print("0", end="  ")
+        #             elif(i==nb_vertices+2):
+        #                 print(int(data[j-3][0])+1, end="  ")
+        #             else:
+        #                 print(data[i-2][0], end="  ")
+        #         elif(j==1):
+        #             if 'none' in data[i-2][2]:
+        #                 print(data[i-2][1], end=" ")
+        #         else:
+        #             print("*", end=" ")
+        # print("\n")
+
+    # return
 
 
 def transform_pretty_table(matrice):
@@ -112,12 +206,13 @@ def is_acyclic(matrix):
 
         for i, row in enumerate(matrix):
             if 'none' in row:
-                rows_to_remove.append(i)
+                rows_to_remove.append(i+1)
                 succ.append(row[0])
+            # print(rows_to_remove)
 
         for index in sorted(rows_to_remove, reverse=True):
-            del matrix[index]
-
+            del matrix[index-1]
+        # print(matrix)
         rows_to_remove.clear()
 
         for i in range(len(matrix)):
@@ -126,6 +221,8 @@ def is_acyclic(matrix):
                 mot = supprimer(succ, mot)
                 mot2 = ','.join(mot)
                 matrix[i][2] = mot2
+                if matrix[i][2] == '':
+                    matrix[i][2] = 'none'
 
             elif ',' not in matrix[i][2] and matrix[i][2] in succ:
                 matrix[i][2] = 'none'
@@ -140,7 +237,8 @@ def is_acyclic(matrix):
     if matrix:
         for row in matrix:
             cycle.append(row[0])
-        print("\033[91mThe graph contains a cycle\033[0m", cycle)
+
+        print("\033[91mThe graph contains a cycle\033[0m")
         return False
     else:
         print("\033[92mThe graph is acyclic\033[0m")
