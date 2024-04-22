@@ -338,10 +338,34 @@ def find_total_float(tasks_matrix):
 def critical_path(tasks_matrix):
     tasks = tasks_matrix[0]
     total_float = tasks_matrix[-1]
+    successors = tasks_matrix[5]
+    durations = tasks_matrix[2]
+    multiple_dur = []
     path = []
+    index_min = []
+    a_supprimer = []
     for i in range(len(tasks)):
         if int(total_float[i]) == 0:
             path.append(tasks[i])
+    if tasks == path:
+        for k in range(len(path)):
+            for l in range(len(tasks)):
+                if path[k] == tasks[l] and ',' in successors[l]:
+                    multiple_succ = successors[l].split(',')
+                    # print("ca", multiple_succ)
+                    for m in range(len(multiple_succ)):
+                        for n in range(len(tasks)):
+                            if multiple_succ[m] == tasks[n]:
+                                multiple_dur.append(durations[n])
+                    # print(multiple_dur)
+                    max_value = max(multiple_dur)
+                    indexes_min = [i for i, value in enumerate(multiple_dur) if value != max_value]
+                    # print(indexes_min)
+                    for i in range(len(indexes_min)):
+                        a_supprimer.append(multiple_succ[indexes_min[i]])
+                    # print("a supp", a_supprimer)
+                    multiple_dur.clear()
+        path = [x for x in path if x not in a_supprimer]
     print("\nThe critical path is : \n")
     for j in range(len(path)):
         print(" --> \033[91m", path[j], "\033[0m", end='')
