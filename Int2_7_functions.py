@@ -84,7 +84,7 @@ def menu(matrix):
 
 
 def read_one_text(index):
-    file = open('Constraint_Tables/table_' + str(index) + '.txt')
+    file = open('Int2_7_Constraint_Tables/table_' + str(index) + '.txt')
     data = []
     for row in file:
         data.append([str(x) for x in row.split()])
@@ -96,95 +96,71 @@ def print_value_matrix(data):
     for x in range(4):
         print("\n")
     nb_vertices = len(data)
-    for i in range(nb_vertices+3):
-        for j in range(nb_vertices+3):
-
+    for i in range(nb_vertices + 3):
+        for j in range(nb_vertices + 3):
             # Print the first line
-            if i == 0:
-                if j == 0:
+            if (i == 0):
+                if (j == 0):
                     print(" ", end="\t")
-                elif j == 1:
+                elif (j == 1):
                     print("0", end="\t")
-                elif j == nb_vertices+2:
-                    print(int(data[j-3][0])+1, end="\t")
+                elif (j == nb_vertices + 2):
+                    print(int(data[j - 3][0]) + 1, end="\t")
                     print("\n")
                 else:
-                    print(data[j-2][0], end="\t")
+                    print(data[j - 2][0], end="\t")
 
 
             # Print the second line (particular case)
-            elif(i==1):
-                if(j==0):
+            elif (i == 1):
+                if (j == 0):
                     print("0", end="\t")
-                elif(j==nb_vertices+2):
-                    print("*",end="\t")
+                elif (j == nb_vertices + 2):
+                    print("*", end="\t")
                     print("\n")
                 else:
-                    if('none' in data[j-2][2]):
+                    if ('none' in data[j - 2][2]):
                         print("0", end="\t")
                     else:
                         print("*", end="\t")
 
-            elif(i==nb_vertices+2):
-                if(j==0):
-                    print(int(data[i-3][0])+1, end="\t")
+
+
+            elif (i == nb_vertices + 2):
+                if (j == 0):
+                    print(int(data[i - 3][0]) + 1, end="\t")
                 else:
-                    if(j==nb_vertices+2):
+                    if (j == nb_vertices + 2):
                         print("*", end="\t")
                         print("\n")
                     else:
                         print("*", end="\t")
+
+
 
             else:
-                if(j==0):
-                    print(data[i-2][0], end="\t")
-                elif(j==nb_vertices+2):
+                if (j == 0):
+                    print(data[i - 2][0], end="\t")
+                elif (j == nb_vertices + 2):
 
-                        cmt=0
-                        for k in range(nb_vertices):
-                            if(str(data[i-2][0]) in data[k][2]):
-                                cmt=cmt+1
-                        if(cmt==0):
-                            print(data[i-2][1], end="\t")
-                        else:
-                            print("*", end="\t")
-                        print("\n")
+                    cmt = 0
+                    for k in range(nb_vertices):
+                        tab = data[k][2].split(sep=',', maxsplit=-1)
+                        if (str(data[i - 2][0]) in tab):
+                            cmt = cmt + 1
+                    if (cmt == 0):
+                        print(data[i - 2][1], end="\t")
+                    else:
+                        print("*", end="\t")
+                    print("\n")
 
                 else:
-                    if(str(data[i-2][0]) in data[j-2][2]):
-                        print(data[i-2][1], end="\t")
+                    tab = data[j - 2][2].split(sep=',', maxsplit=-1)
+                    if (str(data[i - 2][0]) in tab):
+                        print(data[i - 2][1], end="\t")
                     else:
                         print("*", end="\t")
 
-    return 
-
-
-
-        #     if (i==0):
-        #         if(j==0):
-        #             print(" ", end="  ")
-        #         elif(j==1):
-        #             print("0", end="  ")
-        #         elif(j==nb_vertices+2):
-        #             print(int(data[j-3][0])+1, end="  ")
-        #         else:
-        #             print(data[j-2][0], end="  ")   
-        #     else:
-        #         if(j==0):
-        #             if(i==1):
-        #                 print("0", end="  ")
-        #             elif(i==nb_vertices+2):
-        #                 print(int(data[j-3][0])+1, end="  ")
-        #             else:
-        #                 print(data[i-2][0], end="  ")
-        #         elif(j==1):
-        #             if 'none' in data[i-2][2]:
-        #                 print(data[i-2][1], end=" ")
-        #         else:
-        #             print("*", end=" ")
-        # print("\n")
-
-    # return
 
 def transform_pretty_table(matrice):
     a = len(matrice[0])
@@ -219,11 +195,10 @@ def is_acyclic(matrix1):
             if 'none' in row:
                 rows_to_remove.append(i+1)
                 succ.append(row[0])
-            # print(rows_to_remove)
 
         for index in sorted(rows_to_remove, reverse=True):
             del matrix[index-1]
-        # print(matrix)
+
         rows_to_remove.clear()
 
         for i in range(len(matrix)):
@@ -266,12 +241,6 @@ def supprimer(list1, list2):
         if item in list2:
             list2.remove(item)
     return list2
-
-
-"""tasks_matrix = [['A', '1', '2', '4', '3', '6', '5', '7', '8', '9', '10', 'W'],
-                ['0', '1', '2', '2', '3', '4', '4', '4', '5', '6', '7', '8'],
-                ['0', '7', '3', '8', '1', '1', '2', '1', '3', '2', '1', '0'],
-                ['--', 'A', '1', '1', '2', '3,4', '3,4', '3,4', '6', '8', '5,7,9', '10']]"""
 
 
 def calculate_earliest_dates(tasks_matrix):
@@ -479,7 +448,6 @@ def rank_func(M):
     final_matrix.append(rank_matrix)
 
     return final_matrix
-
 
 
 def duration(matrix, constraint_table):    
